@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import { sql } from '@vercel/postgres';
 
 // Makes sure the table exists before we touch it. Cheap no-op after the

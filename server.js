@@ -3,7 +3,7 @@
 // as api/contacts.js, talking to the same Postgres database.
 require('dotenv').config();
 const express = require('express');
-const { randomUUID } = require('crypto');
+const { randomUUID } = require('node:crypto');
 const { sql } = require('@vercel/postgres');
 
 const app = express();

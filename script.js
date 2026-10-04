@@ -34,11 +34,21 @@ async function api(path, options = {}) {
 
   if (!res.ok) {
     let message = `Request failed (${res.status})`;
+    const resForText = res.clone(); // keep a readable copy in case .json() fails
     try {
       const body = await res.json();
       if (body?.error) message = body.error;
     } catch {
-      /* ignore parse errors on empty/non-JSON bodies */
+      // Response wasn't JSON (e.g. a platform-level crash page rather than
+      // our own error handler). Fall back to showing the raw response text
+      // so there's still something useful to debug, instead of a bare
+      // "Request failed (500)".
+      try {
+        const text = await resForText.text();
+        if (text) message = `Request failed (${res.status}): ${text.slice(0, 300)}`;
+      } catch {
+        /* truly nothing to read, keep the generic message */
+      }
     }
     throw new Error(message);
   }
