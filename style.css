@@ -276,37 +276,6 @@ body {
   z-index: 20;
 }
 
-.command-bar__toggle {
-  width: 100%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: var(--paper);
-  border: none;
-  border-bottom: 1px solid var(--border);
-  color: var(--ink-soft);
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 8px;
-  cursor: pointer;
-}
-
-.command-bar__chevron {
-  width: 14px;
-  height: 14px;
-  transition: transform 0.15s ease;
-}
-
-.command-bar--collapsed .command-bar__chevron {
-  transform: rotate(180deg);
-}
-
-.command-bar--collapsed .command-bar__body {
-  display: none;
-}
-
 .command-bar__body {
   max-width: 640px;
   margin: 0 auto;

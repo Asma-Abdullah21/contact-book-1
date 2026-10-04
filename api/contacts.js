@@ -1,12 +1,14 @@
+import { randomUUID } from 'crypto';
 import { sql } from '@vercel/postgres';
 
 // Makes sure the table exists before we touch it. Cheap no-op after the
-// first call since CREATE TABLE IF NOT EXISTS / CREATE EXTENSION are idempotent.
+// first call since CREATE TABLE IF NOT EXISTS is idempotent. IDs are
+// generated here in JS (randomUUID) rather than via a Postgres extension,
+// so there's no CREATE EXTENSION permission to worry about.
 async function ensureSchema() {
-  await sql`CREATE EXTENSION IF NOT EXISTS pgcrypto`;
   await sql`
     CREATE TABLE IF NOT EXISTS contacts (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      id UUID PRIMARY KEY,
       name TEXT NOT NULL,
       phone TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -31,9 +33,10 @@ export default async function handler(req, res) {
         if (!name || !phone) {
           return res.status(400).json({ error: 'Name and phone are required.' });
         }
+        const id = randomUUID();
         const { rows } = await sql`
-          INSERT INTO contacts (name, phone)
-          VALUES (${name}, ${phone})
+          INSERT INTO contacts (id, name, phone)
+          VALUES (${id}, ${name}, ${phone})
           RETURNING id, name, phone
         `;
         return res.status(201).json(rows[0]);
@@ -72,6 +75,8 @@ export default async function handler(req, res) {
     }
   } catch (err) {
     console.error('contacts API error:', err);
-    return res.status(500).json({ error: 'Something went wrong on the server.' });
+    return res.status(500).json({
+      error: `Server error: ${err.message || 'something went wrong.'}`,
+    });
   }
 }

@@ -3,6 +3,7 @@
 // as api/contacts.js, talking to the same Postgres database.
 require('dotenv').config();
 const express = require('express');
+const { randomUUID } = require('crypto');
 const { sql } = require('@vercel/postgres');
 
 const app = express();
@@ -10,10 +11,9 @@ app.use(express.json());
 app.use(express.static(__dirname)); // serves index.html, style.css, script.js
 
 async function ensureSchema() {
-  await sql`CREATE EXTENSION IF NOT EXISTS pgcrypto`;
   await sql`
     CREATE TABLE IF NOT EXISTS contacts (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      id UUID PRIMARY KEY,
       name TEXT NOT NULL,
       phone TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -30,7 +30,7 @@ app.get('/api/contacts', async (req, res) => {
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Something went wrong on the server.' });
+    res.status(500).json({ error: `Server error: ${err.message || 'something went wrong.'}` });
   }
 });
 
@@ -41,15 +41,16 @@ app.post('/api/contacts', async (req, res) => {
     if (!name || !phone) {
       return res.status(400).json({ error: 'Name and phone are required.' });
     }
+    const id = randomUUID();
     const { rows } = await sql`
-      INSERT INTO contacts (name, phone)
-      VALUES (${name}, ${phone})
+      INSERT INTO contacts (id, name, phone)
+      VALUES (${id}, ${name}, ${phone})
       RETURNING id, name, phone
     `;
     res.status(201).json(rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Something went wrong on the server.' });
+    res.status(500).json({ error: `Server error: ${err.message || 'something went wrong.'}` });
   }
 });
 
@@ -71,7 +72,7 @@ app.put('/api/contacts', async (req, res) => {
     res.status(200).json(rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Something went wrong on the server.' });
+    res.status(500).json({ error: `Server error: ${err.message || 'something went wrong.'}` });
   }
 });
 
@@ -83,7 +84,7 @@ app.delete('/api/contacts', async (req, res) => {
     res.status(204).end();
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Something went wrong on the server.' });
+    res.status(500).json({ error: `Server error: ${err.message || 'something went wrong.'}` });
   }
 });
 

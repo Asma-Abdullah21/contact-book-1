@@ -59,25 +59,21 @@
   <section class="command-bar" aria-labelledby="command-title">
     <h2 id="command-title" class="visually-hidden">Command line for adding, editing, and deleting contacts</h2>
 
-    <button type="button" class="command-bar__toggle" id="command-toggle" aria-expanded="true" aria-controls="command-log">
-      <span>Command line</span>
-      <svg class="command-bar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
-    </button>
-
     <div class="command-bar__body" id="command-body">
-      <ol class="command-log" id="command-log"></ol>
+      <ol class="command-log" id="command-log" hidden></ol>
 
       <form id="command-form" class="command-form">
         <input
           type="text"
           id="command-input"
           class="command-form__input"
-          placeholder="Try: add Jordan Lee, +92 300 1234567"
+          placeholder="add Jordan Lee, +92 300 1234567"
           autocomplete="off"
           spellcheck="false"
         >
         <button type="submit" class="btn btn--primary command-form__submit">Run</button>
       </form>
+      <p class="command-hint">add &lt;name&gt;, &lt;phone&gt; &middot; edit &lt;name&gt;, &lt;new phone&gt; &middot; delete &lt;name&gt;</p>
     </div>
   </section>
 

@@ -55,7 +55,7 @@ async function loadContacts() {
     clearError();
   } catch (err) {
     console.error('Could not load contacts:', err);
-    showError('Could not load contacts. Check your database connection and reload.');
+    showError(err.message || 'Could not load contacts. Check your database connection and reload.');
     contacts = [];
   } finally {
     loadingState.hidden = true;
@@ -136,7 +136,7 @@ async function deleteContact(id) {
     await loadContacts();
   } catch (err) {
     console.error('Could not delete contact:', err);
-    showError('Could not delete that contact. Please try again.');
+    showError(err.message || 'Could not delete that contact. Please try again.');
   }
 }
 
@@ -191,7 +191,7 @@ form.addEventListener('submit', async (e) => {
     await loadContacts();
   } catch (err) {
     console.error('Could not save contact:', err);
-    showError('Could not save that contact. Please try again.');
+    showError(err.message || 'Could not save that contact. Please try again.');
     submitBtn.disabled = false;
   }
 });
@@ -205,19 +205,12 @@ cancelBtn.addEventListener('click', resetForm);
 //   delete <name>
 // ---------------------------------------------------------------------
 
-const commandBar = document.querySelector('.command-bar');
-const commandToggle = document.getElementById('command-toggle');
-const commandBody = document.getElementById('command-body');
 const commandLog = document.getElementById('command-log');
 const commandForm = document.getElementById('command-form');
 const commandInput = document.getElementById('command-input');
 
-commandToggle.addEventListener('click', () => {
-  const collapsed = commandBar.classList.toggle('command-bar--collapsed');
-  commandToggle.setAttribute('aria-expanded', String(!collapsed));
-});
-
 function logCommand(commandText, resultText, isError = false) {
+  commandLog.hidden = false;
   const li = document.createElement('li');
   li.className = `command-log__entry${isError ? ' command-log__entry--error' : ''}`;
   li.innerHTML = `
@@ -331,10 +324,5 @@ commandForm.addEventListener('submit', async (e) => {
   commandInput.disabled = false;
   commandInput.focus();
 });
-
-logCommand(
-  'help',
-  'Commands: add <name>, <phone>  ·  edit <name>, <new phone>  ·  delete <name>'
-);
 
 loadContacts();
