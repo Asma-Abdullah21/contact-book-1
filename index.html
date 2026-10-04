@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="page">
+    <header class="page-head">
+      <h1>Contact Book</h1>
+      <p class="page-head__sub">Keep a running list of names and numbers, saved to a real database.</p>
+    </header>
+
+    <p class="banner" id="error-banner" hidden></p>
+
+    <section class="card form-card" aria-labelledby="form-title">
+      <h2 id="form-title" class="visually-hidden">Add or edit a contact</h2>
+      <form id="contact-form" novalidate>
+        <input type="hidden" id="contact-id">
+
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Jordan Lee" autocomplete="off" required>
+          <span class="field__error" id="name-error"></span>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" placeholder="+92 300 1234567" autocomplete="off" required>
+          <span class="field__error" id="phone-error"></span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="submit-btn" class="btn btn--primary">Add contact</button>
+          <button type="button" id="cancel-btn" class="btn btn--ghost" hidden>Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="list-section" aria-labelledby="list-title">
+      <div class="list-head">
+        <h2 id="list-title">Saved contacts</h2>
+        <span class="count" id="contact-count">0</span>
+      </div>
+
+      <p class="empty-state" id="empty-state" hidden>No contacts yet — the one you add above will show up here.</p>
+      <p class="loading-state" id="loading-state">Loading contacts…</p>
+
+      <ul class="contact-grid" id="contact-list"></ul>
+    </section>
+  </main>
+
+  <section class="command-bar" aria-labelledby="command-title">
+    <h2 id="command-title" class="visually-hidden">Command line for adding, editing, and deleting contacts</h2>
+
+    <button type="button" class="command-bar__toggle" id="command-toggle" aria-expanded="true" aria-controls="command-log">
+      <span>Command line</span>
+      <svg class="command-bar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    </button>
+
+    <div class="command-bar__body" id="command-body">
+      <ol class="command-log" id="command-log"></ol>
+
+      <form id="command-form" class="command-form">
+        <input
+          type="text"
+          id="command-input"
+          class="command-form__input"
+          placeholder="Try: add Jordan Lee, +92 300 1234567"
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <button type="submit" class="btn btn--primary command-form__submit">Run</button>
+      </form>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
